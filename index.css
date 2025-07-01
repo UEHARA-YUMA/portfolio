@@ -1,0 +1,125 @@
+/* 全体のスタイル */
+body {
+    /* 背景色を濃い青に */
+    background-color: #EAF6F6;
+    font-family: 'Meiryo', 'メイリオ', sans-serif;
+}
+
+/* コンテンツ全体を囲むボックスのスタイル */
+.container {
+    width: 90%;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px 30px;
+    /* text-align: center; を削除 */
+}
+
+/* メインの見出しのスタイル */
+h1 {
+    /* 文字色を背景の補色であるオレンジに */
+    color: #CC5500;
+    font-size: 2.5em; /* 文字を大きく */
+    margin-bottom: 40px;
+    /* h1のみ中央揃えを維持 */
+    text-align: center;
+    background-color: #c3ffff;
+    border: 3px solid #000000;
+}
+
+.profile-summary {
+    width: 80%;
+    max-width: 650px;
+    background-color: rgb(195, 255, 249);
+    border: 3px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 0 auto;
+}
+
+/* 各紹介項目を中央に配置するためのラッパー */
+.profile-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+
+/* 各紹介項目のボックスのスタイル */
+.profile-item {
+    margin-bottom: 10px;
+    /* テキストを左揃えに */
+    text-align: left;
+    /* 必要に応じて幅を指定 */
+    width: 90%; /* 例：親要素の80%の幅 */
+    max-width: 600px; /* 最大幅を指定 */
+}
+
+/* マウスが乗っていない時の項目の文字スタイル */
+.profile-item p {
+    color: #CC5500;
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+
+
+/* タグ全体のコンテナ */
+.nav-tags {
+    text-align: center; /* タグを中央揃えに */
+    margin-bottom: 40px; /* タグと自己紹介項目の間のスペース */
+}
+
+/* タグリストのスタイルリセット */
+.nav-tags ul {
+    margin: 0;
+    padding: 0;
+    list-style: none; /* リストの黒点を削除 */
+}
+
+/* 各タグの配置 */
+.nav-tags li {
+    display: inline-block; /* 横並びに */
+    margin: 0 10px; /* タグ同士の左右の余白 */
+}
+
+/* タグのリンクスタイル */
+.nav-tags a {
+    display: block;
+    padding: 10px 20px; /* タグの余白 */
+    background-color: #ffffff; /* 背景色を白に */
+    color: #CC5500; /* 文字色を既存のテーマに合わせる */ /* */
+    text-decoration: none; /* 下線を削除 */
+    border: 2px solid #CC5500; /* テーマカラーの枠線 */ /* */
+    border-radius: 20px; /* 角を丸くする */
+    font-weight: bold;
+    transition: all 0.3s ease; /* アニメーションを滑らかに */
+}
+
+/* マウスカーソルを合わせた時のタグのスタイル */
+.nav-tags a:hover {
+    background-color: #CC5500; /* 背景色をテーマカラーに */ /* */
+    color: #ffffff; /* 文字色を白に */
+    cursor: pointer; /* カーソルを指の形に変更 */
+}
+
+p#nowTime	{
+	font-size: 2em;
+	color: white;
+	background: rgba(255, 255, 255, 0.5);
+	position: fixed;
+	top: 10px;					/*右上を基準としたy座標の位置*/
+	right: 10px;					/*右上を基準としたx座標の位置*/
+	margin: 5px;				/*外側の空白の大きさ*/
+}
+
+.profile-item a:visited    {
+    color: #ff0000;
+}
+
+.profile-item a:hover    {
+    color: blue;
+}
+
+.profile-item a:active  {
+    color: black;
+}
