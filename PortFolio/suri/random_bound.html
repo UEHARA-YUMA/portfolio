@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>ランダムバウンド</title>
+        <style>
+        #canvas01 {border: 1px solid black;} /* キャンバスの外枠を目視確認用に追加 */
+        </style>
+    </head>
+    <body>
+    <h1>ランダムバウンド</h1>
+    <canvas id="canvas01" width="700" height="500"></canvas>
+    <script>
+    onload = function() {
+        var canvas = document.getElementById("canvas01");
+        var ctx = canvas.getContext("2d");
+
+        var x = 20;     //初期位置（X座標）
+        var y = 480;    //初期位置（Y座標）
+        var w = 20;     //物体の幅
+        var h = 20;     //物体の高
+        var frame = 0;
+        var sx = 6;     //速度（X座標）
+        var sy = -25;   //速度（Y座標）
+
+        var x2 = Math.floor(Math.random() * 660) + 20;     //初期位置（X座標）ランダムで20~680のx座標になる
+        var y2 = Math.floor(Math.random() * 460) + 20;    //初期位置（Y座標）ランダムで20~680のx座標になる
+        var sx2 = Math.floor(Math.random() * 20) + 5;     //速度（X座標）
+        var sy2 = Math.floor(Math.random() * 30) + 5;   //速度（Y座標）
+
+        function draw() {
+            //キャンバス全体をクリアする。前のフレームの描画を消す。
+            ctx.clearRect(0, 0, 700, 500);
+
+            //赤キューブが右の壁に達しているかどうか確かめる(x座標が680より大きい場合)　//追加
+            if(x > 680) {
+                x = 680;
+                sx = -sx * 1
+            }
+            //赤キューブが左の壁に達しているかどうか確かめる(x座標が0以下の場合)　//追加
+            else if(x <= 0) {
+                x = 0;
+                sx = -sx * 1
+            }
+
+            //赤キューブが地面に達しているかどうか確かめる(y座標が480より大きい場合)
+            if(y > 480) {
+                y = 480;　//赤キューブが地面より下に行かないようにする
+                sy = -sy * 1 //0.8; //バウンドさせるための式　（整数を大きくするととてもはねる）
+            }
+            //赤キューブが天上に達しているかどうか確かめる(y座標が0以下の場合) //追加
+            else if(y <= 0){
+                y = 0;  //赤キューブが天上より上に行かないようにする
+                sy = -sy * 1;
+            }
+
+
+
+            //紫キューブが右の壁に達しているかどうか確かめる(x座標が680より大きい場合)　//追加
+            if(x2 > 680) {
+                x2 = 680;
+                sx2 = Math.floor(Math.random() * 20) + 5;
+                sx2 = -sx2 * 1
+            }
+            //紫キューブが左の壁に達しているかどうか確かめる(x座標が0以下の場合)　//追加
+            else if(x2 <= 0) {
+                x2 = 0;
+                sx2 = -sx2 * 1
+            }
+
+            //紫キューブが地面に達しているかどうか確かめる(y座標が480より大きい場合)
+            if(y2 > 480) {
+                y2 = 480;　//紫キューブが地面より下に行かないようにする
+                sy2 = Math.floor(Math.random() * 20) + 5;
+                sy2 = -sy2 * 1 //0.8; //バウンドさせるための式　（整数を大きくするととてもはねる）
+            }
+            //紫キューブが天上に達しているかどうか確かめる(y座標が0以下の場合) //追加
+            else if(y2 < 0){
+                y2 = 0;  //紫キューブが天上より上に行かないようにする
+                sy2 = -sy2 * 1;
+            }
+
+            x = x + sx                  //更新するたびにx座標を更新する
+            y = y + sy;                 //更新するたびにy座標を更新する
+            ctx.fillStyle = "#ff0000";  //塗色の指定
+            ctx.beginPath();            //描画を開始
+            ctx.rect(x, y, w, h);
+            ctx.fill();
+
+            x2 = x2 + sx2;               //更新するたびにx座標を更新する
+            y2 = y2 + sy2;               //更新するたびにy座標を更新する
+            ctx.fillStyle = "#9e00ff";  //塗色の指定
+            ctx.beginPath();            //描画を開始
+            ctx.rect(x2, y2, w, h);
+            ctx.fill();
+
+            frame++;
+        }
+
+        setInterval(draw, 33);
+    }
+    </script>
+    <p><a href="animal.html">熊注意</a><br>
+    <p><a href="colorful_hanabi.html">カラフル連発花火</a><br>
+    <p><a href="rain.html">雨と水滴</a><br>
+    <p><a href="syateki.html">射的アニメーション</a><br>
+	<p><a href="../Art.html">戻る</a><br>
+    </body>
+</html>

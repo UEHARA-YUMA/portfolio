@@ -1,0 +1,190 @@
+/* 全体のスタイル */
+body {
+    /* 背景色を濃い青に */
+    background-color: #EAF6F6;
+    font-family: 'Meiryo', 'メイリオ', sans-serif;
+}
+
+/* コンテンツ全体を囲むボックスのスタイル */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px 30px;
+}
+
+/* メインの見出しのスタイル */
+h1 {
+    color: #CC5500;
+    font-size: 3em;
+    text-align: center;
+    background-color: #c3ffff;
+    border: 3px solid #000000;
+}
+
+.profile-summary {
+	align-items: flex-start; /* 子要素を垂直方向（上下）の中央に配置 */
+	justify-content: center; /* 子要素を水平方向（左右）の中央に配置 */
+	gap: 30px;
+	max-width: 1000px; /* 最大幅を少し調整 */
+	background-color: rgb(195, 255, 249);
+	border: 3px solid #ddd;
+	border-radius: 4px;
+	padding: 20px; /* パディングを調整 */
+	margin: 0 auto;
+	width: auto;
+}
+
+.profile-summary#self{
+	display: flex;  /* Flexboxを有効にして子要素を横並びに */
+}
+
+/* 各紹介項目を中央に配置するためのラッパー */
+.profile-wrapper {
+    display: flex;
+}
+
+/* 各紹介項目のボックスのスタイル */
+.profile-item {
+	margin-bottom: 10px;
+	text-align: left;
+	max-width: auto; /* 最大幅を指定 */
+}
+
+/* タグ全体のコンテナ */
+.nav-tags {
+	text-align: center; /* タグを中央揃えに */
+	margin-bottom: 40px; /* タグと自己紹介項目の間のスペース */
+	background-color: #FDFFD0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* タグリストのスタイルリセット */
+.nav-tags ul {
+    margin: 0;
+    padding: 0;
+    list-style: none; /* リストの黒点を削除 */
+}
+
+/* 各タグの配置 */
+.nav-tags li {
+    display: inline-block; /* 横並びに */
+    margin: 0 10px; /* タグ同士の左右の余白 */
+}
+
+/* タグのリンクスタイル */
+.nav-tags a {
+	display: block;
+	padding: 10px 20px; /* タグの余白 */
+	background-color: #ffffff; /* 背景色を白に */
+	color: #CC5500; /* 文字色を既存のテーマに合わせる */ /* */
+	text-decoration: none; /* 下線を削除 */
+	border: 2px solid #CC5500; /* テーマカラーの枠線 */ /* */
+	border-radius: 20px; /* 角を丸くする */
+	font-weight: bold;
+	transition: all 0.3s ease; /* アニメーションを滑らかに */
+	font-size: 1.5em;
+}
+
+/* マウスカーソルを合わせた時のタグのスタイル */
+.nav-tags a:hover {
+    background-color: #CC5500; /* 背景色をテーマカラーに */ /* */
+    color: #ffffff; /* 文字色を白に */
+    cursor: pointer; /* カーソルを指の形に変更 */
+}
+
+p#nowTime	{
+	font-size: 2em;
+	color: white;
+	background: rgba(255, 255, 255, 0.5);
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	margin: 5px;
+}
+
+.profile-item p {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* プロフィール画像エリアのスタイル */
+.profile-image img {
+    width: 300px; /* 画像の幅 */
+    height: 400px; /* 画像の高さ */
+    object-fit: cover; /* 画像の比率を保ったままエリアにフィットさせる */
+    border: 3px solid #000000; /* 枠線を追加 */
+}
+
+/* プロフィール詳細エリアのスタイル (特に変更は不要ですが、明示的にクラスを置きます) */
+.profile-details {
+	width: 400px;
+    max-width: 500px;
+}
+
+/* :rootにカラー変数を定義 */
+:root {
+  --profile-text-color: #CC5500; /* 通常時の文字色 */
+  --profile-visited-color: #ff0000;  /* 訪問済みの文字色 */
+  --profile-hover-color: blue;      /* カーソルを合わせた時の文字色 */
+  --profile-active-color: black;    /* クリック中の文字色 */
+}
+
+/* ▼▼▼ ここの a タグの指定を変数を使うように変更 ▼▼▼ */
+.profile-item a {
+    color: var(--profile-text-color); /* 変数を使用 */
+}
+
+.profile-item a:visited {
+    color: var(--profile-visited-color); /* 変数を使用 */
+}
+
+.profile-item a:hover {
+    color: var(--profile-hover-color); /* 変数を使用 */
+}
+
+.profile-item a:active {
+    color: var(--profile-active-color); /* 変数を使用 */
+}
+.profile-Arts img {
+	width: 400px;
+	margin-right: 15px;
+}
+.profile-Arts {
+	display: flex;
+	width: 100%; /* 親要素の幅いっぱいに広がるように変更 */
+	align-items: flex-start; /* 画像とテキストを上揃えにすると見やすいです */
+}
+img {
+	width: 40%;
+	max-width: none;
+}
+/* 画像を横並びにするためのスタイル */
+/* 以前追加したコードをこちらに置き換えてください */
+
+/* 画像を横並びにするためのスタイル */
+.image-row {
+    display: flex;
+    justify-content: center; /* 画像をグループとして中央に配置します */
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    width: 100%; /* 親要素の幅いっぱいに広がるように設定します */
+    flex-wrap: wrap; /* 画面が狭くなった時に画像が自動で折り返すようにします */
+}
+
+/* 横並びにした画像自体のスタイル */
+.image-row img {
+    width: 30%; /* 親要素に対しての画像の幅を指定します */
+    max-width: 250px; /* 画像が大きくなりすぎるのを防ぐための最大幅です */
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid #555;
+    object-fit: cover; /* 比率を保ったまま領域を埋めるようにします */
+}
+
+#active-page-wrapper {
+    justify-content: center; /* Flexboxの機能で、中の要素を水平方向の中央に配置します */
+}

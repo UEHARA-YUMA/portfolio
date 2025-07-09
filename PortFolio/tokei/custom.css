@@ -1,0 +1,56 @@
+html	{
+	text-align: center;
+}
+
+body {
+    margin: 0;
+    background-size: cover;
+   	font-family: "MS Mincho";
+}
+
+h1	{
+	font-size: 60px;
+	background-color: ivory;
+	width: 500px;
+	margin: 0.3em auto;
+	padding: 10px;
+}
+
+canbas#clockCanvas	{
+	 width:700px;
+	 height:700px;
+}
+
+p#nowTime	{
+	font-size: 50px;
+	color: white;
+	background: rgba(255, 255, 255, 0.5);
+	position: fixed;
+	top: 10px;					/*右上を基準としたy座標の位置*/
+	right: 10px;					/*右上を基準としたx座標の位置*/
+	margin: 5px;				/*外側の空白の大きさ*/
+}
+
+p#keikoku	{
+	font-size: 40px;
+	color: white;
+	width: 800px;
+	background: rgba(255, 255, 255, 0.5);
+	position: relative;
+	margin: 10px auto;			/*外側の空白の大きさ*/
+	padding: 10px;
+}
+
+p#credit	{
+	font-size: 20px;
+	color: white;
+	width: 200px;
+	height: 100px;
+	position: absolute;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(255, 255, 255, 0.5);
+    margin:  10px;			/*外側の空白の大きさ*/
+	padding: auto;
+}
+

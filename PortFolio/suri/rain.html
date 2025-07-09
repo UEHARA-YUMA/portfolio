@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>雨と水滴</title>
+        <style>canvas {border: 2px solid black; /* 黒い枠線を追加 */}</style>
+    </head>
+    <body>
+    <h1>雨と水滴</h1>
+    <canvas id="canvas01" width="700" height="500"></canvas>
+    <script>
+    class Particle {
+        constructor(x, y, sx, sy, ax, ay, lifeSpan)    {
+            this.x = x; // 横の位置
+            this.y = y; // 縦の位置
+            this.sx = sx;
+            this.sy = sy;
+            this.ax = ax;
+            this.ay = ay;
+            this.lifeSpan = lifeSpan;
+            this.age = 0;
+            this.fillStyle = "#00ffd9";
+            this.w = 20;
+            this.h = 20;
+        }
+
+        update(ctx) {
+            if(this.age++ >= this.lifeSpan)
+                return;
+
+            this.x = this.x + this.sx + this.ax / 2;
+            this.y = this.y + this.sy + this.ay / 2;
+            this.sx = this.sx + this.ax;
+            this.sy = this.sy + this.ay;
+            ctx.fillStyle = this.fillStyle;
+            ctx.beginPath();
+            ctx.rect(this.x, this.y, this.w, this.h);
+            ctx.fill();
+        }
+    }
+
+    class Animator {
+        constructor(ctx, width, height) {
+            this.ctx = ctx;
+            this.width = width;
+            this.height = height;
+            this.stack = [];
+            this.frame = 0;
+        }
+
+        add(p) {
+            this.stack.push(p);
+        }
+
+        update() {
+            this.ctx.clearRect(0, 0, this.width, this.height);
+
+            var i = 0;
+            while(i < this.stack.length)    {
+                if(this.stack[i].age >= this.stack[i].lifeSpan) {
+                    this.stack.splice(i, 1);
+                    continue;
+                }
+                this.stack[i].update(this.ctx, this);  // 修正: anim（this）を引き渡す
+                i++;
+            }
+
+            this.frame++;
+        }
+    }
+
+    class BounceRaindrop extends Particle {
+        constructor(x, y, sx, sy, ax, ay, lifeSpan) {
+            super(x, y, sx, sy, ax, ay, lifeSpan);
+            this.fillStyle = "#00aaff";  // 小さな雨粒の色
+            this.w = 10;  // 小さな雨粒の幅
+            this.h = 10;  // 小さな雨粒の高さ
+        }
+
+        update(ctx) {
+            super.update(ctx);
+        }
+    }
+
+    class BounceBall extends Particle {
+        constructor(x, y, sx, sy, ax, ay, lifeSpan) {
+            super(x, y, sx, sy, ax, ay, lifeSpan);
+            this.split = false; // split フラグを初期化
+        }
+
+        update(ctx, anim) {  // 修正: anim（Animatorオブジェクト）を引数で受け取る
+            if (this.y > 480 && !this.split) { // 地面に当たったとき
+                this.y = 480; // 地面にピッタリくっつける
+                this.sy = 0; // 垂直方向の速度を0にする
+                this.split = true; // 新しい雨粒を生成するフラグを立てる
+
+                // 三つの新しい雨粒を生成して横に分裂させる
+                for (let i = -1; i <= 1; i++) {
+                    let newRaindrop = new BounceRaindrop(
+                        this.x + (i * Math.floor(Math.random() * (50 - 10) + 10)),  // 現在のx位置を少しずつずらす
+                        this.y,
+                        i * 5,                              // 左右に跳ねる速度を設定
+                        -10,                                // 少し上に跳ね返す
+                        0,                                  // 水平方向の加速度は0
+                        Math.random() * (1 - 0.5) + 0.5,    // 垂直方向の加速度を少しだけ加える
+                        120                                 // 寿命を設定
+                    );
+                    anim.add(newRaindrop);                  // 新しい雨粒をアニメーションに追加
+                }
+            }
+            super.update(ctx);
+        }
+    }
+
+    // 修正：onload 関数内で anim を正しく初期化
+    window.onload = function() {
+        var canvas = document.getElementById("canvas01");
+        var ctx = canvas.getContext("2d");
+        var anim = new Animator(ctx, 700, 500); // Animatorを作成
+
+        function update() {
+            if((anim.frame % 6) == 0)  {
+                p = new BounceBall(Math.random() * 700, 0, 0, 10, 0, 3, 240);
+                anim.add(p);
+            }
+            anim.update();
+        }
+
+        setInterval(update, 44);
+    }
+    </script>
+    <p><a href="animal.html">熊注意</a><br>
+    <p><a href="colorful_hanabi.html">カラフル連発花火</a><br>
+    <p><a href="random_bound.html">ランダムバウンド</a><br>
+    <p><a href="syateki.html">射的アニメーション</a><br>
+	<p><a href="../Art.html">戻る</a><br>
+    </body>
+</html>

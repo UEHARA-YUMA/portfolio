@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>射的アニメーション</title>
+        <style>canvas {border: 2px solid black; /* 黒い枠線を追加 */}</style>
+    </head>
+    <body>
+    <h1>射的アニメーション</h1>
+    <canvas id="canvas01" width="700" height="500" ></canvas>
+    <script>
+    class Particle {
+        constructor(x, y, sx, sy, ax, ay, lifeSpan)    {
+            this.x = x; //横の位置
+            this.y = y; //縦の位置
+            this.sx = sx; //横の初速度
+            this.sy = sy; //縦の初速度
+            this.ax = ax;
+            this.ay = ay;
+            this.lifeSpan = lifeSpan;
+            this.age = 0;
+            this.fillStyle = "#7c3f00";
+            this.w = 20;
+            this.h = 20;
+
+            // 初期値を保持
+            this.farststatus = { x, y, sx, sy, ax, ay, lifeSpan };
+        }
+
+        reset() {
+            // 初期値に基づいてプロパティをリセット
+            const { x, y, sx, sy, ax, ay, lifeSpan } = this.farststatus;
+            this.x = x;
+            this.y = y;
+            this.sx = sx;
+            this.sy = sy;
+            this.ax = ax;
+            this.ay = ay;
+            this.lifeSpan = lifeSpan;
+            this.age = 0; // 寿命をリセット
+        }
+
+        update(ctx) {
+            if(this.age++ >= this.lifeSpan){
+                // 寿命が尽きたらリセット
+                this.reset();
+                return;
+            }
+
+            this.x = this.x + this.sx + this.ax / 2;
+            this.y = this.y + this.sy + this.ay / 2;
+            this.sx = this.sx + this.ax;
+            this.sy = this.sy + this.ay;
+            ctx.fillStyle = this.fillStyle;
+            ctx.beginPath();
+            ctx.rect(this.x, this.y, this.w, this.h);
+            ctx.fill();
+        }
+    }
+
+    onload = function() {
+        var canvas = document.getElementById("canvas01");
+        var ctx = canvas.getContext("2d");
+
+        var frame = 0;
+        // var 変数名　= new Particle(x, y, sx, sy, ax, ay, lifeSpan)で新しい四角ができる
+        var p = new Particle(20, 480, 5, -10, 0, 0, 100);
+        var p2 = new Particle(200, 480, 10, -20, 0, 0, 100);
+        var p3 = new Particle(350, 480, -20, -30, 0, 0, 100);
+        var p4 = new Particle(450, 480, 5, -10, 0, 0, 100);
+        var p5 = new Particle(550, 480, -10, -15, 0, 0, 100);
+        var p6 = new Particle(600, 480, -5, -30, 0, 0, 100);
+
+        //変数名.操作したい要素 = 要素　で特定の要素を変えることができる
+        //p.fillStyle = "#7c3f00";
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // キャンバスの幅と高さ
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+
+            // 縞模様を描画
+            const LineCount = 16; // 縞の列数
+            const LineWidth = canvasWidth / LineCount; // 各縞の幅
+
+            for (let i = 0; i < LineCount; i++) {
+                // 偶数列は白、奇数列は赤
+                if(i == 0){
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(i * LineWidth, 0, LineWidth/2, canvasHeight);
+                }
+                else if(i%2 == 0){
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(i * LineWidth, 0, LineWidth, canvasHeight);
+                }else if(i == LineCount - 1){
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(i * LineWidth, 0, LineWidth/2, canvasHeight);
+                }else{
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(i * LineWidth, 0, LineWidth, canvasHeight);
+                }
+            }
+
+            // 黒い横線を3本描画
+            const lineHeight = 300; // 横線の高さ
+            const lineYPositions = 300; // 横線のy座標
+
+            ctx.fillStyle = "black"; // 横線の色を黒に設定
+            ctx.fillRect(0, lineYPositions, canvasWidth, lineHeight); // 横線を描画
+
+            // 青い四角形を等間隔で描画
+            const squareWidth = 30; // 四角形の幅
+            const squareHeight = 40; // 四角形の高さ
+            const gap = 50; // 四角形の間隔
+
+            // 横線の上に青い四角形を等間隔で配置
+            const squareY = 260; // 四角形のy座標（黒い横線の上に描く）
+
+            const numSquares = Math.floor(canvasWidth / (squareWidth + gap)); // 四角形を描画する数
+
+            ctx.fillStyle = "blue"; // 四角形の色を青に設定
+            for (let i = 0; i < numSquares; i++) {
+                    const x = i * (squareWidth + gap); // x座標を等間隔に配置
+                    ctx.fillRect(x, squareY, squareWidth, squareHeight); // 四角形を描画
+            }
+
+            //変数名.update(ctx)で四角形を描きつつ更新する。
+            p.update(ctx);
+            p2.update(ctx);
+            p3.update(ctx);
+
+            //if文と条件式、frameを使うことで指定したタイミングでアニメーションを再生できる。
+            if(frame > 10){
+                p.update(ctx);
+            }
+
+            if(frame > 15){
+                p2.update(ctx);
+            }
+
+            if(frame > 30)  {
+                p3.update(ctx);
+            }
+
+            if(frame > 35)  {
+                p4.update(ctx);
+            }
+
+            if(frame > 44)  {
+                p5.update(ctx);
+            }
+
+            if(frame > 55)  {
+                p5.update(ctx);
+            }
+
+            frame++;
+        }
+        setInterval(draw, 55);
+    }
+    </script>
+    <p><a href="animal.html">熊注意</a><br>
+    <p><a href="colorful_hanabi.html">カラフル連発花火</a><br>
+    <p><a href="rain.html">雨と水滴</a><br>
+    <p><a href="random_bound.html">ランダムバウンド</a><br>
+	<p><a href="../Art.html">戻る</a><br>
+    </body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>カラフル連発花火</title>
+    </head>
+    <body>
+        <h1>カラフル連発花火</h1>
+        <canvas id="canvas01" width="700" height="500"></canvas>
+        <script>
+            class Particle {
+                constructor(x, y, sx, sy, ax, ay, lifeSpan) {
+                    this.x = x; //横の位置
+                    this.y = y; //縦の位置
+                    this.sx = sx;
+                    this.sy = sy;
+                    this.ax = ax;
+                    this.ay = ay;
+                    this.lifeSpan = lifeSpan;
+                    this.age = 0;
+                    this.fillStyle = "#ff0000";
+                    this.w = 20;
+                    this.h = 20;
+                }
+
+                update(ctx) {
+                    if (this.age++ >= this.lifeSpan) return;
+
+                    this.x = this.x + this.sx + this.ax / 2;
+                    this.y = this.y + this.sy + this.ay / 2;
+                    this.sx = this.sx + this.ax;
+                    this.sy = this.sy + this.ay;
+                    ctx.fillStyle = this.fillStyle;
+                    ctx.beginPath();
+                    ctx.rect(this.x, this.y, this.w, this.h);
+                    ctx.fill();
+                }
+            }
+
+            class Animator {
+                constructor(ctx, width, height) {
+                    this.ctx = ctx;
+                    this.width = width;
+                    this.height = height;
+                    this.stack = [];
+                    this.frame = 0;
+                }
+
+                add(p) {
+                    this.stack.push(p);
+                }
+
+                update() {
+                    //this.ctx.clearRect(0, 0, this.width, this.height);
+                    this.ctx.fillStyle = "#000000"; //背景色の設定
+                    this.ctx.fillRect(0, 0, this.width, this.height); //背景の範囲
+
+                    var i = 0;
+                    while (i < this.stack.length) {
+                        if (this.stack[i].age >= this.stack[i].lifeSpan) {
+                            this.stack.splice(i, 1);
+                            continue;
+                        }
+                        this.stack[i].update(this.ctx);
+                        i++;
+                    }
+
+                    this.frame++;
+                }
+            }
+
+            class Hanabi03 extends Particle {
+                constructor(x, y, sx, sy, ax, ay, lifeSpan) {
+                    super(x, y, sx, sy, ax, ay, lifeSpan);
+                }
+
+                update(ctx) {
+                    if (this.age == this.lifeSpan - 1) {
+                        //発生してから現在までのフレーム数がlifeSpan-1だったとき
+                        for (var i = 0; i < 300; i++) {
+                            //300回繰り返す（ここの回数は火花の数）
+                            var a = Math.random() * Math.PI; //Math.random()で0~1の乱数を生み出す 0~πまでの数字ができる
+                            var b = (Math.random() - 0.5) * Math.PI;
+                            var x = Math.cos(b) * Math.cos(a);
+                            var y = Math.sin(b) * Math.sin(a);
+                            //new Particle(爆発する花火玉のx座標,爆発する花火玉のy座標,x方向の初速度,y方向の加速度,x方向の加速度,y方向の加速度,火花の寿命)
+                            //x方向の初速度とy方向の初速度にかける値を変えることで速さは変わる
+                            //x方向の加速度が大きいほど火花が落ちる速度が速くなる
+                            //火花の寿命は40~45に設定されている
+                            var p = new Hoshi01(this.x, this.y, x * 5, y * 5, 0, 0.1, 40 + Math.random() * 5); //Hoshi01クラスのインスタンスを生成
+                            p.w = 5; //火花の横幅
+                            p.h = 5; //火花の縦幅
+                            anim.add(p);
+                        }
+                    }
+                    super.update(ctx);
+                }
+            }
+
+            class Hoshi01 extends Particle {
+                constructor(x, y, sx, sy, ax, ay, lifeSpan) {
+                    super(x, y, sx, sy, ax, ay, lifeSpan);
+                    // 3:花火三段階変化を行うためのカウント（初期は -1 にしておく）
+                    this.hanabihenge = -1;
+
+                    // 3:最初の色を生成する
+                    // 2:ランダムな色を生成して設定する(変化は一回のみ)
+                    //this.fillStyle = `rgb(${Math.floor(Math.random() * 256 * 5)}, ${Math.floor(Math.random() * 256 * 5)}, ${Math.floor(Math.random() * 256 * 5)})`;
+                }
+
+                update(ctx) {
+                    //1:星の色を決める処理
+                    var col = Math.floor((3 * this.age) / this.lifeSpan); //パーティクルができてから消えるまでを0~2で表す
+
+                    /*  1:case0~2の計三回色を変える */
+                    const red = Math.floor(Math.random() * 256 * 5);    // RGBのRの値をランダムで決める
+                    const green = Math.floor(Math.random() * 256 * 5);  // RGBのGの値をランダムで決める
+                    const blue = Math.floor(Math.random() * 256 * 5);   // RGBのBの値をランダムで決める
+
+                    const randomColor = `rgb(${red}, ${green}, ${blue})`;
+
+
+                    //それぞれの火花の色を変える
+                    /*1を使う場合はswitch (col)のコメントアウトを解除する*/
+                    switch (col) {
+                        case 0:
+                            //　1:
+                            this.fillStyle = randomColor;
+                            //　2: this.fillStyle = "#ff0000";
+                            break;
+
+                        case 1:
+                            // 1:
+                            this.fillStyle = randomColor;
+                            // 2: this.fillStyle = "#00ff00";
+                            break;
+                        case 2:
+                            // 1:
+                            this.fillStyle = randomColor;
+                            // 2: this.fillStyle = "#0000ff";
+                            break;
+                    }
+
+                    /*
+                    // 3:段階が変わったら新しいランダムな色を生成
+                    if (col !== this.hanabihenge) {
+                        this.hanabihenge = col; // 現在の段階を更新
+                        this.stageColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+                    }
+
+                    // 3:現在の段階の色を適用
+                    this.fillStyle = this.stageColor;
+                    */
+
+                    super.update(ctx);
+                }
+            }
+
+            onload = function () {
+                var canvas = document.getElementById("canvas01");
+                var ctx = canvas.getContext("2d");
+                anim = new Animator(ctx, canvas.width, canvas.height); //Animatorクラスのインスタンスを生成
+                anim.bgFillStyle = "rgb(0, 0, 0)";
+
+                function createHanabi() {
+                    //var p = new Hanabi01(250, 480, 0, -27, 0, 1, 30); //Hanabi01クラスのインスタンスを生成
+                    var p = new Hanabi03(Math.random() * (canvas.width - 10), 480, 0, -27, 0, 1, 30); //Hanabi01クラスのインスタンスを生成
+                    p.fillStyle = "#ffff00"; //打ちあがる花火の色
+                    p.w = 10; //打ちあがる花火の横幅
+                    p.h = 10; //打ちあがる花火の縦幅
+                    anim.add(p); //花火玉のパーティクルをanimに登録
+                }
+
+                // 花火をランダムで生成する
+                setInterval(() => {
+                    if (Math.random() < 0.3) {
+                        // 30% の確率で花火を生成
+                        createHanabi();
+                    }
+                }, 250); // 500ms 毎にチェック
+
+                function update() {
+                    anim.update();
+                }
+
+                setInterval(update, 33);
+            };
+        </script>
+    <p><a href="animal.html">熊注意</a><br>
+    <p><a href="rain.html">雨と水滴</a><br>
+    <p><a href="random_bound.html">ランダムバウンド</a><br>
+    <p><a href="syateki.html">射的アニメーション</a><br>
+	<p><a href="../Art.html">戻る</a><br>
+    </body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>アナログデジタル時計</title>
+<script src="http://meziro.sun.ac.jp/~sun/js/tokei.js"></script>
+<link type="text/css" rel="stylesheet" href="custom.css">
+
+<script>
+// 画像オブジェクト
+let imgclock = new Image();
+let imgCenter = new Image();
+let imgHour = new Image();
+let imgMinute = new Image();
+let imgSecond = new Image();
+
+// 画像ファイルの読み込み
+imgclock.src = "clock.png";                             // 盤面の画像を入れる
+imgCenter.src = "center.png";                                // 中央に配置する画像を入れる
+imgHour.src = "h.png";                                  // 時針の画像を入れる
+imgMinute.src = "m.png";                                // 分針の画像を入れる
+imgSecond.src = "s.png";                                // 秒針の画像を入れる
+
+//window.onload:Webページが完全に読み込まれた後に実行されるイベント
+window.onload = function() {
+    updateBackground();                                 //最初に背景を設定する
+    setInterval(tick, 1000);                            //1秒ごとにtick()を呼び出す
+    setInterval(updateBackground, 60000);               //1分ごとにupdateBackground()を呼び出す
+}
+
+//日付・時・分・秒といった時間の情報を取得し、drawClockに引数として渡す
+function tick() {
+    let date = new Date();                              //現在の日時と時刻を取る
+    let hours = date.getHours() % 12;                   //現在の時を取る。 現在の時刻（24時間制）を 12時間制に変換 0から11の値を返す
+
+    let minutes = date.getMinutes();                    //現在の分を取る。 0から59の値を返す
+
+    let seconds = date.getSeconds();                    //現在の秒を取る。 0から59の値を返す
+
+    drawClock(hours, minutes, seconds);                 //現在の時刻を基に時計を描画する関数を呼び出す
+}
+
+function updateBackground() {
+    // 現在の時間を取得
+    let now = new Date();                               //現在の日時と時刻を取る
+    let hours = now.getHours();                         //現在の時を取る。
+
+    // 背景画像を選択
+    let backgroundImage;
+    if (hours >= 0 && hours < 8) {                      // 現在の時刻が00:00:00 ～ 07:59:59であれば
+        backgroundImage = "url('morning.jpg')";         // 背景画像をmorning.jpgにする
+
+    } else if (hours >= 8 && hours < 16) {              // 現在の時刻が08:00:00 ～ 15:59:59であれば
+        backgroundImage = "url('noon.jpg')";            // 背景画像をnoon.jpgにする
+
+    } else {                                            // 現在の時刻が16:00:00 ～ 23:59:59であれば
+        backgroundImage = "url('afternoon.jpg')";       // 背景画像をafternoon.jpgにする
+
+    }
+
+    // 背景画像を設定
+    document.body.style.backgroundImage = backgroundImage;
+}
+
+function drawClock(hours, minutes, seconds) {
+    //id属性がclockCanvasの要素を取る
+    let canvas = document.getElementById("clockCanvas");
+    canvas.width = 700;  // 描画解像度の幅
+    canvas.height = 700; // 描画解像度の高さ
+
+    //キャンバスの描画コンテキストを取る
+    let ctx = canvas.getContext("2d");                  //"2d"は2D描画用のコンテキストを取る
+
+    //キャンバスをクリアする
+    ctx.clearRect(0, 0, canvas.width, canvas.height);   //clearRect(x, y, width, height) x:消去領域の左上角のx座標。 y:消去領域の左上角のy座標。 width:消去する領域の幅。 height:消去する領域の高さ。 canvas.width: キャンバスの横幅  canvas.height: キャンバスの縦高さ
+
+    // 盤面を描画する
+    ctx.drawImage(imgclock, 0, 0, canvas.width, canvas.height);    // ctx.drawImage(image, dx, dy, dWidth, dHeight)); image:描画する画像 dx:キャンバス上での描画開始位置のx座標。dy: キャンバス上での描画開始位置のy座標。 dWidth: 描画する画像の幅。 dHeight: 描画する画像の高さ。
+
+    // 各針を描画する
+    let centerX = canvas.width / 2;
+    let centerY = canvas.height / 2;
+
+
+    // 時針を描画する
+    drawRotatedImage(ctx, imgHour, centerX, centerY, (hours * 30) + (minutes / 2));
+
+    // 分針を描画する
+    drawRotatedImage(ctx, imgMinute, centerX, centerY, (minutes * 6) + (seconds / 10));
+
+    // 秒針を描画する
+    drawRotatedImage(ctx, imgSecond, centerX, centerY, seconds * 6);
+
+    // 中央の画像を描画する
+    if (imgCenter.complete) {
+        const imgX = centerX - imgCenter.width / 2;
+        const imgY = centerY - imgCenter.height / 2;
+        ctx.drawImage(imgCenter, imgX, imgY); // 中央に描画
+    }
+
+}
+
+// 回転して描画する関数
+// ctx:描画操作を行うオブジェクト　image:描画する画像（事前にnew Image()を記述）　x, y:キャンバス上の回転の中心となる座標　angle:回転させる角度（単位: 度）
+function drawRotatedImage(ctx, image, x, y, angle) {
+    ctx.save();                                                     //現在のキャンバスの状態を保存する
+    ctx.translate(x, y);                                            //座標を移動する（(x, y) を中心に移動）
+    ctx.rotate(angle * Math.PI / 180);                              //角度を指定する（指定した角度（度）をラジアンに変換して回転）
+    ctx.drawImage(image, -image.width / 2, -image.height);          //画像を描画する（画像のy座標が0でx座標の中心を回転の基準点として描画）
+    ctx.restore();                                                  //状態を元に戻す（キャンバスの状態を復元）
+
+}
+
+function updateClock() {
+    let now = new Date();                                           //現在の日時と時刻を取る
+    let hours = now.getHours();                                     //現在の時を取る。 現在の時刻（24時間制）を0から23の値を返す
+    let minutes = now.getMinutes();                                 //現在の分を取る。 0から59の値を返す
+    let seconds = now.getSeconds();                                 //現在の秒を取る。 0から59の値を返す
+
+    // 2桁の数字に整える
+    // hours.toString():数値を文字列に変換する（数字をそろえるため）
+    // .padStart(targetLength, padString):文字列の先頭に指定した文字(padString)を埋めて、指定した長さ(targetLength)になるようにする。
+    hours = hours.toString().padStart(2, '0');
+    minutes = minutes.toString().padStart(2, '0');
+    seconds = seconds.toString().padStart(2, '0');
+
+    // 表示する内容を作成する
+    let nowTime = `${hours}:${minutes}:${seconds}`;                 //変数hours、変数minutes、変数secondsを取得し、それぞれを：で区切る。区切ったものを変数nowTimeに入れる
+    // ID属性が "nowTime" に設定されている要素を取得する
+    // .textContent:テキストを取得する(ID属性が "nowTime" に設定されている要素のテキストを取得する)
+    // 変数nowTimeにID属性が "nowTime" に設定されている要素のテキストを代入する
+    document.getElementById("nowTime").textContent = nowTime;
+
+    //
+    if(seconds < 20){
+        // 変数nowTimeにID属性が "nowTime" に設定されている要素のフォントのカラーにする
+        document.getElementById("nowTime").style.color = "#e64d00";
+        document.getElementById("nowTime").style.backgroundColor = "#e6cfe6";
+    }else if(20 <= seconds && seconds <= 39){
+        // 変数nowTimeにID属性が "nowTime" に設定されている要素のフォントのカラーにする
+        document.getElementById("nowTime").style.color = "#e69900";
+        document.getElementById("nowTime").style.backgroundColor = "#b8dee6";
+    }else if(40 <= seconds && seconds <= 59){
+        // 変数nowTimeにID属性が "nowTime" に設定されている要素のフォントのカラーにする
+        document.getElementById("nowTime").style.color = "#00e600";
+        document.getElementById("nowTime").style.backgroundColor = "#cfb8e6";
+    }
+
+    // 時がちょうどであれば音声を再生
+    if (minutes == 59 && seconds > 57) {
+        const audio = document.getElementById("sound");
+        audio.play();
+    }
+
+        const Sectctk = document.getElementById("Sectctk");
+        Sectctk.play();
+
+}
+
+    // 初期表示と1秒ごとの更新
+    setInterval(updateClock, 1000);
+    updateClock(); // 初回表示を即座に更新
+
+
+</script>
+</head>
+<body>
+    <h1>時報付き時計</h1>
+    <!-- 時計表示用のキャンバス -->
+    <canvas id="clockCanvas"></canvas>
+    <p id="nowTime"></p>
+    <p id="keikoku">クリックすると音が鳴ります</p>
+    <p id="credit">素材<br>SE:OtoLogic<br>illust:上原優真<br><a href="../Art.html">戻る</a><br></p>
+    <audio src="Clocksound.mp3" id="sound" ></audio>
+    <audio src="Sectctk.mp3" id="Sectctk" ></audio>
+
+</body>
+</html>
